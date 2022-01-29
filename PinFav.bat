@@ -1,6 +1,6 @@
 ::------------------------------------------------------------------------------
 :: NAME
-::     PinFav.bat
+::     PinFav.bat - Pin Favorite
 ::
 :: DESCRIPTION
 ::     Pin your favorite window.
