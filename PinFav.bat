@@ -6,14 +6,14 @@
 ::     Pin your favorite window.
 ::
 :: KNOWN BUGS
-::      Programs minimized in the notification area are ignored.
+::     Programs minimized in the notification area are ignored.
+::     Some rare other programs are sometimes also ignored.
 ::
 :: AUTHOR
 ::     IB_U_Z_Z_A_R_Dl
 ::
 :: CREDITS
 ::     @Rosalyn - Original project idea, testing and ideas.
-::     @Sintrode - Some code optimisation.
 ::
 ::     A project created in the "server.bat" Discord: https://discord.gg/GSVrHag
 ::------------------------------------------------------------------------------
@@ -24,7 +24,6 @@ set "@CMDWIZ=!cmdwiz.exe! showwindow ? /n:"!executable!""
 setlocal EnableDelayedExpansion
 
 set cmdwiz.exe=lib\cmdwiz.exe
-
 if not exist "!cmdwiz.exe!" (
     echo ERROR: PinFav can't start because "!cmdwiz.exe!" is missing.
     echo Please reinstall PinFav and try again.
@@ -32,7 +31,6 @@ if not exist "!cmdwiz.exe!" (
     pause
     exit /b 0
 )
-
 set index=0
 
 :MAIN_MENU
@@ -79,7 +77,7 @@ if defined write_newline (
     set index=0
 )
 echo:
-echo [Warnings]:
+echo [Known bugs]:
 echo - Programs minimized in the notification area are ignored.
 echo - Some rare other programs are sometimes also ignored.
 echo:
