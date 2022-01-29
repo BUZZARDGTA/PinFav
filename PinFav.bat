@@ -36,8 +36,10 @@ set index=0
 :MAIN_MENU
 cls
 set /a write_header=1, cn_memory=0, cn_loop=0
-if defined write_newline (
-    set write_newline=
+for %%A in (write_newline set_exact_name) do (
+    if defined %%A (
+        set %%A=
+    )
 )
 >nul 2>&1 set memory_executable_ && (
     for /l %%A in (1,1,!index!) do (
@@ -86,26 +88,31 @@ choice /n /c PR
 if !errorlevel!==1 (
     set display_action=Pin
     set action=PIN
+    goto :CHOOSE_EXECUTABLE
 ) else if !errorlevel!==2 (
     set display_action=Restore
     set action=RESTORE
-) else (
-    exit /b
+    goto :CHOOSE_EXECUTABLE
 )
+goto :MAIN_MENU
 
 :CHOOSE_EXECUTABLE
 if defined executable (
     set executable=
 )
-set /p "executable=>> Enter the executable you want to !display_action!: "
+set /p "executable=>> Enter the executable you want to !display_action! or "BACK": "
 if not defined executable (
     call :ERROR_WINDOW
     goto :CHOOSE_EXECUTABLE
 ) else (
+    if /i "!executable!"=="BACK" (
+        goto :MAIN_MENU
+    )
     if not "!executable:~-4!"==".exe" (
         set "executable=!executable!.exe"
     )
 )
+set set_exact_name=1
 call :TASKLIST executable || (
     call :ERROR_WINDOW
     goto :CHOOSE_EXECUTABLE
@@ -137,10 +144,16 @@ if !action!==PIN (
 goto :MAIN_MENU
 
 :TASKLIST
-tasklist /v /fo csv /fi "imagename eq !%1!" | >nul find /i "!%1!" || (
-    exit /b 1
+for /f "skip=1delims=," %%A in ('tasklist /v /fo csv /fi "imagename eq !%1!"') do (
+    if /i "%%~A"=="!%1!" (
+        if defined set_exact_name (
+            set set_exact_name=
+            set "%1=%%~A"
+        )
+        exit /b 0
+    )
 )
-exit /b 0
+exit /b 1
 
 :ERROR_WINDOW
 echo Error: Invalid window name or window is not currently running.
