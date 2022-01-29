@@ -36,10 +36,8 @@ set index=0
 :MAIN_MENU
 cls
 set /a write_header=1, cn_memory=0, cn_loop=0
-for %%A in (write_newline set_exact_name) do (
-    if defined %%A (
-        set %%A=
-    )
+if defined write_newline (
+    set write_newline=
 )
 >nul 2>&1 set memory_executable_ && (
     for /l %%A in (1,1,!index!) do (
@@ -112,7 +110,6 @@ if not defined executable (
         set "executable=!executable!.exe"
     )
 )
-set set_exact_name=1
 call :TASKLIST executable || (
     call :ERROR_WINDOW
     goto :CHOOSE_EXECUTABLE
@@ -146,9 +143,10 @@ goto :MAIN_MENU
 :TASKLIST
 for /f "skip=1delims=," %%A in ('tasklist /v /fo csv /fi "imagename eq !%1!"') do (
     if /i "%%~A"=="!%1!" (
-        if defined set_exact_name (
-            set set_exact_name=
-            set "%1=%%~A"
+        if %1==executable (
+            if not "!%1!"=="%%~A" (
+                set "%1=%%~A"
+            )
         )
         exit /b 0
     )
