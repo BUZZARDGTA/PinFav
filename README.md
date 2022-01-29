@@ -1,4 +1,4 @@
-# Pin Favorites
+# Pin Favorite
 
 *Description*:
 > Pin your favorite window.
